@@ -44,9 +44,9 @@ estimates3= []
 
 #create vectors corresponding to evolution of parameters
 for j in np.arange(np.size(simulationTime)):
-    estimates1.append(RLS.estimates[j][0])
-    estimates2.append(RLS.estimates[j][1])
-    estimates3.append(RLS.estimates[j][2])
+    estimates1.append(RLS.x_k[j][0])
+    estimates2.append(RLS.x_k[j][1])
+    estimates3.append(RLS.x_k[j][2])
 
 # create vectors corresponding to the true values in order to plot the results
 estimate1true=initialPosition*np.ones(np.size(simulationTime))
