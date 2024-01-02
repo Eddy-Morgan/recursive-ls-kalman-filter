@@ -8,37 +8,37 @@ class RecursiveLeastSquares():
         self.P0 = P0
         self.R = R
 
-        self.currentTimeStep = 0
+        self.t_step = 0
 
-        self.estimates = []
-        self.estimates.append(x0)
+        self.x_k = []
+        self.x_k.append(x0)
 
-        self.estimationCovarianceMatrices = []
-        self.estimationCovarianceMatrices.append(P0)
+        self.P_k = []
+        self.P_k.append(P0)
 
-        self.gainMatrices = []
+        self.K_k = []
 
         self.errors = []
 
     def predict(self, y, C:np.ndarray):
-        L_k = self.R + C@self.estimationCovarianceMatrices[self.currentTimeStep]@C.T
+        L_k = self.R + C@self.P_k[self.t_step]@C.T
         L_k_inv = np.linalg.inv(L_k)
         #compute gain matrix
-        gainMatrix = self.estimationCovarianceMatrices[self.currentTimeStep]@C.T@L_k_inv
+        K = self.P_k[self.t_step]@C.T@L_k_inv
 
         #compute correction
-        error = y - C@self.estimates[self.currentTimeStep]
+        error = y - C@self.x_k[self.t_step]
 
         #new estimate
-        estimate = self.estimates[self.currentTimeStep] + gainMatrix@error
+        estimate = self.x_k[self.t_step] + K@error
 
         #propagate the estimation error covariance 
-        estimationCovarianceMatrix = (np.identity(np.size(self.x0)) - gainMatrix@C)@self.estimationCovarianceMatrices[self.currentTimeStep]
+        P = (np.identity(np.size(self.x0)) - K@C)@self.P_k[self.t_step]
 
-        self.estimates.append(estimate)
-        self.estimationCovarianceMatrices.append(estimationCovarianceMatrix)
-        self.gainMatrices.append(gainMatrix)
+        self.x_k.append(estimate)
+        self.P_k.append(P)
+        self.K_k.append(K)
         self.errors.append(error)
 
 
-        self.currentTimeStep += 1
+        self.t_step += 1
