@@ -73,7 +73,7 @@ class ExtendedKalmanFilter():
         self.currentTimeStep +=1
 
     def computeAposteriorEstimate(self, currentMeasurement):
-        Ck = self.jacobianOutputEquation(self.estimates_aposteriori[self.currentTimeStep])
+        Ck = self.jacobianOutputEquation(self.estimates_apriori[self.currentTimeStep-1])
         #gain matrix
         Kk = self.estimationErrorCovarianceMatricesApriori[self.currentTimeStep-1]@Ck.T@np.linalg.inv(self.R + Ck@self.estimationErrorCovarianceMatricesApriori[self.currentTimeStep-1]@Ck.T)
         
@@ -81,7 +81,7 @@ class ExtendedKalmanFilter():
         error_k = currentMeasurement - self.outputEquation(self.estimates_apriori[self.currentTimeStep-1])
 
         #a posterior estimate
-        xk_plus = self.estimates_apriori[self.currentTimeStep-1] + Kk@error_k
+        xk_plus = self.estimates_apriori[self.currentTimeStep-1] + Kk@np.array([error_k])
 
         # a posterior error covariance matrix
         Pk_plus = (np.identity(np.size(self.x0)) - Kk@Ck)@self.estimationErrorCovarianceMatricesApriori[self.currentTimeStep-1]
