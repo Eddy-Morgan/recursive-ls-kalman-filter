@@ -1,4 +1,5 @@
 import numpy as np
+
 class RecursiveLeastSquares():
     #  x0 - initial estimate used to initialize the estimator
     #  P0 - initial estimation error covariance matrix
